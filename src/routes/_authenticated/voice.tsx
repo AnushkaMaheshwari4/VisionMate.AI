@@ -127,8 +127,3 @@ function ConversationRow({ c, onChanged }: { c: Conv; onChanged: () => void }) {
   );
 }
 
-// Note: this file only provides the list view; per-conversation chat lives in voice.$id.tsx.
-// We re-export Outlet usage via parent? No — the routes are siblings, not nested.
-export const _outletForTypes = Outlet;
-export const _paramsForTypes = useParams;
-export const _linkForTypes = Link;
