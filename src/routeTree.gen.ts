@@ -9,38 +9,171 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedVoiceRouteImport } from './routes/_authenticated/voice'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedNarratorRouteImport } from './routes/_authenticated/narrator'
+import { Route as AuthenticatedEmergencyRouteImport } from './routes/_authenticated/emergency'
+import { Route as AuthenticatedDocumentsRouteImport } from './routes/_authenticated/documents'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedVoiceIndexRouteImport } from './routes/_authenticated/voice.index'
+import { Route as AuthenticatedVoiceIdRouteImport } from './routes/_authenticated/voice.$id'
 
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedVoiceRoute = AuthenticatedVoiceRouteImport.update({
+  id: '/voice',
+  path: '/voice',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedNarratorRoute = AuthenticatedNarratorRouteImport.update({
+  id: '/narrator',
+  path: '/narrator',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedEmergencyRoute = AuthenticatedEmergencyRouteImport.update({
+  id: '/emergency',
+  path: '/emergency',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDocumentsRoute = AuthenticatedDocumentsRouteImport.update({
+  id: '/documents',
+  path: '/documents',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedVoiceIndexRoute = AuthenticatedVoiceIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedVoiceRoute,
+} as any)
+const AuthenticatedVoiceIdRoute = AuthenticatedVoiceIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AuthenticatedVoiceRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/documents': typeof AuthenticatedDocumentsRoute
+  '/emergency': typeof AuthenticatedEmergencyRoute
+  '/narrator': typeof AuthenticatedNarratorRoute
+  '/settings': typeof AuthenticatedSettingsRoute
+  '/voice': typeof AuthenticatedVoiceRouteWithChildren
+  '/voice/$id': typeof AuthenticatedVoiceIdRoute
+  '/voice/': typeof AuthenticatedVoiceIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/documents': typeof AuthenticatedDocumentsRoute
+  '/emergency': typeof AuthenticatedEmergencyRoute
+  '/narrator': typeof AuthenticatedNarratorRoute
+  '/settings': typeof AuthenticatedSettingsRoute
+  '/voice/$id': typeof AuthenticatedVoiceIdRoute
+  '/voice': typeof AuthenticatedVoiceIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/documents': typeof AuthenticatedDocumentsRoute
+  '/_authenticated/emergency': typeof AuthenticatedEmergencyRoute
+  '/_authenticated/narrator': typeof AuthenticatedNarratorRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/voice': typeof AuthenticatedVoiceRouteWithChildren
+  '/_authenticated/voice/$id': typeof AuthenticatedVoiceIdRoute
+  '/_authenticated/voice/': typeof AuthenticatedVoiceIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/documents'
+    | '/emergency'
+    | '/narrator'
+    | '/settings'
+    | '/voice'
+    | '/voice/$id'
+    | '/voice/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/documents'
+    | '/emergency'
+    | '/narrator'
+    | '/settings'
+    | '/voice/$id'
+    | '/voice'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/documents'
+    | '/_authenticated/emergency'
+    | '/_authenticated/narrator'
+    | '/_authenticated/settings'
+    | '/_authenticated/voice'
+    | '/_authenticated/voice/$id'
+    | '/_authenticated/voice/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +181,104 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/voice': {
+      id: '/_authenticated/voice'
+      path: '/voice'
+      fullPath: '/voice'
+      preLoaderRoute: typeof AuthenticatedVoiceRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/narrator': {
+      id: '/_authenticated/narrator'
+      path: '/narrator'
+      fullPath: '/narrator'
+      preLoaderRoute: typeof AuthenticatedNarratorRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/emergency': {
+      id: '/_authenticated/emergency'
+      path: '/emergency'
+      fullPath: '/emergency'
+      preLoaderRoute: typeof AuthenticatedEmergencyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/documents': {
+      id: '/_authenticated/documents'
+      path: '/documents'
+      fullPath: '/documents'
+      preLoaderRoute: typeof AuthenticatedDocumentsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/voice/': {
+      id: '/_authenticated/voice/'
+      path: '/'
+      fullPath: '/voice/'
+      preLoaderRoute: typeof AuthenticatedVoiceIndexRouteImport
+      parentRoute: typeof AuthenticatedVoiceRoute
+    }
+    '/_authenticated/voice/$id': {
+      id: '/_authenticated/voice/$id'
+      path: '/$id'
+      fullPath: '/voice/$id'
+      preLoaderRoute: typeof AuthenticatedVoiceIdRouteImport
+      parentRoute: typeof AuthenticatedVoiceRoute
+    }
   }
 }
 
+interface AuthenticatedVoiceRouteChildren {
+  AuthenticatedVoiceIdRoute: typeof AuthenticatedVoiceIdRoute
+  AuthenticatedVoiceIndexRoute: typeof AuthenticatedVoiceIndexRoute
+}
+
+const AuthenticatedVoiceRouteChildren: AuthenticatedVoiceRouteChildren = {
+  AuthenticatedVoiceIdRoute: AuthenticatedVoiceIdRoute,
+  AuthenticatedVoiceIndexRoute: AuthenticatedVoiceIndexRoute,
+}
+
+const AuthenticatedVoiceRouteWithChildren =
+  AuthenticatedVoiceRoute._addFileChildren(AuthenticatedVoiceRouteChildren)
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedDocumentsRoute: typeof AuthenticatedDocumentsRoute
+  AuthenticatedEmergencyRoute: typeof AuthenticatedEmergencyRoute
+  AuthenticatedNarratorRoute: typeof AuthenticatedNarratorRoute
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedVoiceRoute: typeof AuthenticatedVoiceRouteWithChildren
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedDocumentsRoute: AuthenticatedDocumentsRoute,
+  AuthenticatedEmergencyRoute: AuthenticatedEmergencyRoute,
+  AuthenticatedNarratorRoute: AuthenticatedNarratorRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedVoiceRoute: AuthenticatedVoiceRouteWithChildren,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
