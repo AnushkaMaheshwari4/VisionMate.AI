@@ -56,7 +56,7 @@ export const sendVoiceMessage = createServerFn({ method: "POST" })
       .limit(3);
 
     const ctxStr = (recentImgs ?? [])
-      .map((r: { title: string; short_description: string | null; simple_summary: string | null }) => `- ${r.title}: ${r.simple_summary ?? r.short_description ?? ""}`)
+      .map((r) => `- ${r.title ?? "Scene"}: ${r.simple_summary ?? r.short_description ?? ""}`)
       .join("\n");
 
     const prior = (history ?? []).map((m: { role: string; content: string }) => MessageSchema.parse(m));
