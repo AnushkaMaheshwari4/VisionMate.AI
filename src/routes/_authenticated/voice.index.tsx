@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { Loader2, Mic, Plus, Search, Trash2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
-export const Route = createFileRoute("/_authenticated/voice")({
+export const Route = createFileRoute("/_authenticated/voice/")({
   head: () => ({ meta: [{ title: "Voice Assistant — VisionMate AI" }] }),
   component: VoiceIndex,
 });
