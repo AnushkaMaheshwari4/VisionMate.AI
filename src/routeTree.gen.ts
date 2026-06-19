@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedVoiceRouteImport } from './routes/_authenticated/voice'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedNarratorRouteImport } from './routes/_authenticated/narrator'
 import { Route as AuthenticatedEmergencyRouteImport } from './routes/_authenticated/emergency'
@@ -33,6 +34,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedVoiceRoute = AuthenticatedVoiceRouteImport.update({
+  id: '/voice',
+  path: '/voice',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   id: '/settings',
@@ -60,14 +66,14 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedVoiceIndexRoute = AuthenticatedVoiceIndexRouteImport.update({
-  id: '/voice/',
-  path: '/voice/',
-  getParentRoute: () => AuthenticatedRouteRoute,
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedVoiceRoute,
 } as any)
 const AuthenticatedVoiceIdRoute = AuthenticatedVoiceIdRouteImport.update({
-  id: '/voice/$id',
-  path: '/voice/$id',
-  getParentRoute: () => AuthenticatedRouteRoute,
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AuthenticatedVoiceRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -78,6 +84,7 @@ export interface FileRoutesByFullPath {
   '/emergency': typeof AuthenticatedEmergencyRoute
   '/narrator': typeof AuthenticatedNarratorRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/voice': typeof AuthenticatedVoiceRouteWithChildren
   '/voice/$id': typeof AuthenticatedVoiceIdRoute
   '/voice/': typeof AuthenticatedVoiceIndexRoute
 }
@@ -102,6 +109,7 @@ export interface FileRoutesById {
   '/_authenticated/emergency': typeof AuthenticatedEmergencyRoute
   '/_authenticated/narrator': typeof AuthenticatedNarratorRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/voice': typeof AuthenticatedVoiceRouteWithChildren
   '/_authenticated/voice/$id': typeof AuthenticatedVoiceIdRoute
   '/_authenticated/voice/': typeof AuthenticatedVoiceIndexRoute
 }
@@ -115,6 +123,7 @@ export interface FileRouteTypes {
     | '/emergency'
     | '/narrator'
     | '/settings'
+    | '/voice'
     | '/voice/$id'
     | '/voice/'
   fileRoutesByTo: FileRoutesByTo
@@ -138,6 +147,7 @@ export interface FileRouteTypes {
     | '/_authenticated/emergency'
     | '/_authenticated/narrator'
     | '/_authenticated/settings'
+    | '/_authenticated/voice'
     | '/_authenticated/voice/$id'
     | '/_authenticated/voice/'
   fileRoutesById: FileRoutesById
@@ -170,6 +180,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/voice': {
+      id: '/_authenticated/voice'
+      path: '/voice'
+      fullPath: '/voice'
+      preLoaderRoute: typeof AuthenticatedVoiceRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/settings': {
       id: '/_authenticated/settings'
@@ -208,20 +225,33 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/voice/': {
       id: '/_authenticated/voice/'
-      path: '/voice'
+      path: '/'
       fullPath: '/voice/'
       preLoaderRoute: typeof AuthenticatedVoiceIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedVoiceRoute
     }
     '/_authenticated/voice/$id': {
       id: '/_authenticated/voice/$id'
-      path: '/voice/$id'
+      path: '/$id'
       fullPath: '/voice/$id'
       preLoaderRoute: typeof AuthenticatedVoiceIdRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedVoiceRoute
     }
   }
 }
+
+interface AuthenticatedVoiceRouteChildren {
+  AuthenticatedVoiceIdRoute: typeof AuthenticatedVoiceIdRoute
+  AuthenticatedVoiceIndexRoute: typeof AuthenticatedVoiceIndexRoute
+}
+
+const AuthenticatedVoiceRouteChildren: AuthenticatedVoiceRouteChildren = {
+  AuthenticatedVoiceIdRoute: AuthenticatedVoiceIdRoute,
+  AuthenticatedVoiceIndexRoute: AuthenticatedVoiceIndexRoute,
+}
+
+const AuthenticatedVoiceRouteWithChildren =
+  AuthenticatedVoiceRoute._addFileChildren(AuthenticatedVoiceRouteChildren)
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
@@ -229,8 +259,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedEmergencyRoute: typeof AuthenticatedEmergencyRoute
   AuthenticatedNarratorRoute: typeof AuthenticatedNarratorRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
-  AuthenticatedVoiceIdRoute: typeof AuthenticatedVoiceIdRoute
-  AuthenticatedVoiceIndexRoute: typeof AuthenticatedVoiceIndexRoute
+  AuthenticatedVoiceRoute: typeof AuthenticatedVoiceRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -239,8 +268,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedEmergencyRoute: AuthenticatedEmergencyRoute,
   AuthenticatedNarratorRoute: AuthenticatedNarratorRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
-  AuthenticatedVoiceIdRoute: AuthenticatedVoiceIdRoute,
-  AuthenticatedVoiceIndexRoute: AuthenticatedVoiceIndexRoute,
+  AuthenticatedVoiceRoute: AuthenticatedVoiceRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
