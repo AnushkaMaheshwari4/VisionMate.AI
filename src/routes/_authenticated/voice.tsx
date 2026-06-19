@@ -1,16 +1,12 @@
-import { createFileRoute, Link, useParams, useNavigate, Outlet } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
-import { useSettings } from "@/hooks/use-settings";
-import { useServerFn } from "@tanstack/react-start";
-import { sendVoiceMessage } from "@/lib/voice.functions";
 import { toast } from "sonner";
-import { createRecognizer, speak, stopSpeaking, type SpeechRecognitionLike } from "@/lib/speech";
-import { Loader2, Mic, MicOff, Plus, Search, Send, Trash2, Volume2 } from "lucide-react";
+import { Loader2, Mic, Plus, Search, Trash2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
 export const Route = createFileRoute("/_authenticated/voice")({
