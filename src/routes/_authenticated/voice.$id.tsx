@@ -101,12 +101,10 @@ function VoiceChat() {
   return (
     <div className="flex flex-col h-[calc(100vh-3.5rem)]">
       <header className="border-b border-border px-4 py-3 flex items-center gap-3">
-        <Button variant="ghost" size="sm" onClick={() => navigate({ to: "/voice" })} aria-label="Back to conversations">
-          <ArrowLeft className="h-4 w-4" aria-hidden />
-        </Button>
         <h1 className="font-semibold truncate flex-1">{title}</h1>
         <span className="text-xs text-muted-foreground hidden sm:inline">{settings.voice_language === "hi" ? "हिन्दी" : "English"}</span>
       </header>
+
 
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-6">
         <div className="max-w-3xl mx-auto space-y-4">
