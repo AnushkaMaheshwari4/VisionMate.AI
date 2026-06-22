@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -10,12 +10,14 @@ import { useServerFn } from "@tanstack/react-start";
 import { sendVoiceMessage } from "@/lib/voice.functions";
 import { toast } from "sonner";
 import { createRecognizer, speak, stopSpeaking, type SpeechRecognitionLike } from "@/lib/speech";
-import { ArrowLeft, Loader2, Mic, MicOff, Send, Volume2 } from "lucide-react";
+import { Loader2, Mic, MicOff, Send, Volume2 } from "lucide-react";
+import { notifyVoiceListChanged } from "./voice";
 
 export const Route = createFileRoute("/_authenticated/voice/$id")({
   head: () => ({ meta: [{ title: "Conversation — VisionMate AI" }] }),
   component: VoiceChat,
 });
+
 
 type Msg = { id: string; role: "user" | "assistant" | "system"; content: string; created_at: string };
 
