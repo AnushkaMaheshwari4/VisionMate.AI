@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -10,12 +10,14 @@ import { useServerFn } from "@tanstack/react-start";
 import { sendVoiceMessage } from "@/lib/voice.functions";
 import { toast } from "sonner";
 import { createRecognizer, speak, stopSpeaking, type SpeechRecognitionLike } from "@/lib/speech";
-import { ArrowLeft, Loader2, Mic, MicOff, Send, Volume2 } from "lucide-react";
+import { Loader2, Mic, MicOff, Send, Volume2 } from "lucide-react";
+import { notifyVoiceListChanged } from "./voice";
 
 export const Route = createFileRoute("/_authenticated/voice/$id")({
   head: () => ({ meta: [{ title: "Conversation — VisionMate AI" }] }),
   component: VoiceChat,
 });
+
 
 type Msg = { id: string; role: "user" | "assistant" | "system"; content: string; created_at: string };
 
@@ -23,8 +25,8 @@ function VoiceChat() {
   const { id } = Route.useParams();
   const { user } = useAuth();
   const { settings } = useSettings();
-  const navigate = useNavigate();
   const send = useServerFn(sendVoiceMessage);
+
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
@@ -59,6 +61,7 @@ function VoiceChat() {
       const result = await send({ data: { conversationId: id, message: text, language: settings.voice_language } });
       const reply = (result as { reply: string }).reply;
       setMsgs((m) => [...m, { id: `a-${Date.now()}`, role: "assistant", content: reply, created_at: new Date().toISOString() }]);
+      notifyVoiceListChanged();
       if (settings.auto_speak) speak(reply, { lang: settings.voice_language, rate: settings.speech_rate });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Message failed");
@@ -99,12 +102,10 @@ function VoiceChat() {
   return (
     <div className="flex flex-col h-[calc(100vh-3.5rem)]">
       <header className="border-b border-border px-4 py-3 flex items-center gap-3">
-        <Button variant="ghost" size="sm" onClick={() => navigate({ to: "/voice" })} aria-label="Back to conversations">
-          <ArrowLeft className="h-4 w-4" aria-hidden />
-        </Button>
         <h1 className="font-semibold truncate flex-1">{title}</h1>
         <span className="text-xs text-muted-foreground hidden sm:inline">{settings.voice_language === "hi" ? "हिन्दी" : "English"}</span>
       </header>
+
 
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-6">
         <div className="max-w-3xl mx-auto space-y-4">
