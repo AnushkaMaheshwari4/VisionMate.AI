@@ -4,9 +4,15 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useSettings } from "@/hooks/use-settings";
-import { Sun, Moon, Monitor, Type, Eye, Volume2 } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
+import { supabase } from "@/integrations/supabase/client";
+import { Sun, Moon, Monitor, Type, Eye, Volume2, User, Loader2 } from "lucide-react";
 import { speak } from "@/lib/speech";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
 
 export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({ meta: [{ title: "Settings — VisionMate AI" }] }),
