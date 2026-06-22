@@ -61,6 +61,7 @@ function VoiceChat() {
       const result = await send({ data: { conversationId: id, message: text, language: settings.voice_language } });
       const reply = (result as { reply: string }).reply;
       setMsgs((m) => [...m, { id: `a-${Date.now()}`, role: "assistant", content: reply, created_at: new Date().toISOString() }]);
+      notifyVoiceListChanged();
       if (settings.auto_speak) speak(reply, { lang: settings.voice_language, rate: settings.speech_rate });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Message failed");
