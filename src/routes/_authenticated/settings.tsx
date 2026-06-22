@@ -21,6 +21,33 @@ export const Route = createFileRoute("/_authenticated/settings")({
 
 function SettingsPage() {
   const { settings, update } = useSettings();
+  const { user } = useAuth();
+  const [fullName, setFullName] = useState("");
+  const [savingProfile, setSavingProfile] = useState(false);
+  const [loadingProfile, setLoadingProfile] = useState(true);
+
+  useEffect(() => {
+    if (!user) return;
+    (async () => {
+      setLoadingProfile(true);
+      const { data } = await supabase.from("profiles").select("full_name").eq("id", user.id).maybeSingle();
+      setFullName(data?.full_name ?? "");
+      setLoadingProfile(false);
+    })();
+  }, [user]);
+
+  async function saveProfile(e: React.FormEvent) {
+    e.preventDefault();
+    if (!user) return;
+    setSavingProfile(true);
+    const { error } = await supabase
+      .from("profiles")
+      .update({ full_name: fullName.trim() || null } as never)
+      .eq("id", user.id);
+    setSavingProfile(false);
+    if (error) toast.error(error.message);
+    else toast.success("Profile updated");
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-3xl">
@@ -29,6 +56,32 @@ function SettingsPage() {
 
       <div className="space-y-6">
         <Card className="p-6">
+          <h2 className="font-semibold mb-4 flex items-center gap-2"><User className="h-5 w-5" aria-hidden /> Profile</h2>
+          <form onSubmit={saveProfile} className="space-y-4">
+            <div>
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" value={user?.email ?? ""} disabled className="mt-1.5 h-11" />
+            </div>
+            <div>
+              <Label htmlFor="full_name">Full name</Label>
+              <Input
+                id="full_name"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                disabled={loadingProfile}
+                placeholder="Your name"
+                className="mt-1.5 h-11"
+              />
+            </div>
+            <Button type="submit" disabled={savingProfile || loadingProfile}>
+              {savingProfile && <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />}
+              Save profile
+            </Button>
+          </form>
+        </Card>
+
+        <Card className="p-6">
+
           <h2 className="font-semibold mb-4 flex items-center gap-2"><Sun className="h-5 w-5" aria-hidden /> Appearance</h2>
           <div className="grid grid-cols-3 gap-3" role="radiogroup" aria-label="Theme">
             {([
