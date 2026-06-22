@@ -25,8 +25,8 @@ function VoiceChat() {
   const { id } = Route.useParams();
   const { user } = useAuth();
   const { settings } = useSettings();
-  const navigate = useNavigate();
   const send = useServerFn(sendVoiceMessage);
+
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
